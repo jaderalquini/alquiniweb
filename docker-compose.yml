@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     image: php:apache
-    restart:always
+    restart: always
     ports:
       - "80:80"
     volumes:
