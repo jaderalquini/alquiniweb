@@ -1,4 +1,9 @@
 <?php
+
+use Adianti\Database\TCriteria;
+use Adianti\Database\TFilter;
+use Adianti\Database\TRepository;
+
 /**
  * Pessoas Active Record
  * @author  <your-name-here>
@@ -8,9 +13,9 @@ class Pessoas extends TRecord
     const TABLENAME = 'pessoas';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
-    
+
     use SystemChangeLogTrait;
-    
+
     private $tipo_residencia;
     private $nacionalidade;
     private $estado_civil;
@@ -23,7 +28,10 @@ class Pessoas extends TRecord
     private $tipo_conta;
     private $representantes;
     private $vendedor;
-    
+    private $grupos_pessoa;
+    private $grupos_pessoa_array;
+    private $grupos_pessoa_list;
+
     /**
      * Constructor method
      */
@@ -73,11 +81,8 @@ class Pessoas extends TRecord
         parent::addAttribute('forma_pagamento_id');
         parent::addAttribute('observacao');
         parent::addAttribute('status');
-        parent::addAttribute('contato');
-        parent::addAttribute('endereco');
-        parent::addAttribute('grupos_pessoa');
     }
-    
+
     /**
      * Method set_tipo_residencia
      * Sample of usage: $pessoas->tipo_residencia = $object;
@@ -88,7 +93,7 @@ class Pessoas extends TRecord
         $this->tipo_residencia = $object;
         $this->tipo_residencia_id = $object->id;
     }
-    
+
     /**
      * Method get_tipo_residencia
      * Sample of usage: $pessoas->tipo_residencia->attribute;
@@ -103,7 +108,7 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->tipo_residencia;
     }
-    
+
     /**
      * Method set_nacionalidade
      * Sample of usage: $pessoas->nacionalidade = $object;
@@ -114,7 +119,7 @@ class Pessoas extends TRecord
         $this->nacionalidade = $object;
         $this->nacionalidade_id = $object->id;
     }
-    
+
     /**
      * Method get_nacionalidade
      * Sample of usage: $pessoas->nacionalidade->attribute;
@@ -125,11 +130,11 @@ class Pessoas extends TRecord
         // loads the associated object
         if (empty($this->nacionalidade))
             $this->nacionalidade = new Nacionalidades($this->nacionalidade_id);
-    
+
         // returns the associated object
         return $this->nacionalidade;
     }
-    
+
     /**
      * Method set_estado_civil
      * Sample of usage: $pessoas->estado_civil = $object;
@@ -140,7 +145,7 @@ class Pessoas extends TRecord
         $this->estado_civil = $object;
         $this->estado_civil_id = $object->id;
     }
-    
+
     /**
      * Method get_estado_civil
      * Sample of usage: $pessoas->estado_civil->attribute;
@@ -155,7 +160,7 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->estado_civil;
     }
-    
+
     /**
      * Method set_conjuge
      * Sample of usage: $pessoas->conjuge = $object;
@@ -166,7 +171,7 @@ class Pessoas extends TRecord
         $this->conjuge = $object;
         $this->conjuge_id = $object->id;
     }
-    
+
     /**
      * Method get_conjuge
      * Sample of usage: $pessoas->conjuge->attribute;
@@ -181,7 +186,7 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->conjuge;
     }
-    
+
     /**
      * Method set_local_trabalho
      * Sample of usage: $pessoas->local_trabalho = $object;
@@ -192,7 +197,7 @@ class Pessoas extends TRecord
         $this->local_trabalho = $object;
         $this->local_trabalho_id = $object->id;
     }
-    
+
     /**
      * Method get_local_trabalho
      * Sample of usage: $pessoas->local_trabalho->attribute;
@@ -207,7 +212,7 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->local_trabalho;
     }
-    
+
     /**
      * Method set_profissao
      * Sample of usage: $pessoas->profissao = $object;
@@ -218,7 +223,7 @@ class Pessoas extends TRecord
         $this->profissao = $object;
         $this->profissao_id = $object->id;
     }
-    
+
     /**
      * Method get_profissao
      * Sample of usage: $pessoas->profissao->attribute;
@@ -233,7 +238,7 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->profissao;
     }
-    
+
     /**
      * Method set_ramo_atividade
      * Sample of usage: $pessoas->ramo_atividade = $object;
@@ -244,7 +249,7 @@ class Pessoas extends TRecord
         $this->ramo_atividade = $object;
         $this->ramo_atividade_id = $object->id;
     }
-    
+
     /**
      * Method get_ramo_atividade
      * Sample of usage: $pessoas->ramo_atividade->attribute;
@@ -259,7 +264,7 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->ramo_atividade;
     }
-    
+
     /**
      * Method set_forma_pagamento
      * Sample of usage: $pessoas->forma_pagamento = $object;
@@ -270,7 +275,7 @@ class Pessoas extends TRecord
         $this->forma_pagamento = $object;
         $this->forma_pagamento_id = $object->id;
     }
-    
+
     /**
      * Method get_forma_pagamento
      * Sample of usage: $pessoas->forma_pagamento->attribute;
@@ -281,11 +286,11 @@ class Pessoas extends TRecord
         // loads the associated object
         if (empty($this->forma_pagamento))
             $this->forma_pagamento = new FormasPagamento($this->forma_pagamento_id);
-    
+
         // returns the associated object
         return $this->forma_pagamento;
     }
-    
+
     /**
      * Method set_banco
      * Sample of usage: $pessoas->banco = $object;
@@ -296,7 +301,7 @@ class Pessoas extends TRecord
         $this->banco = $object;
         $this->banco_id = $object->id;
     }
-    
+
     /**
      * Method get_banco
      * Sample of usage: $pessoas->banco->attribute;
@@ -311,7 +316,7 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->banco;
     }
-    
+
     /**
      * Method set_tipo_conta
      * Sample of usage: $pessoas->tipo_conta = $object;
@@ -322,7 +327,7 @@ class Pessoas extends TRecord
         $this->tipo_conta = $object;
         $this->tipo_conta_id = $object->id;
     }
-    
+
     /**
      * Method get_tipo_conta
      * Sample of usage: $pessoas->tipo_conta->attribute;
@@ -337,7 +342,57 @@ class Pessoas extends TRecord
         // returns the associated object
         return $this->tipo_conta;
     }
-    
+
+    public function get_grupos_pessoa()
+    {
+        $grupos_pessoa = $this->getGruposPessoa();
+
+        $grupos = [];
+        if ($grupos_pessoa)
+        {
+            foreach ($grupos_pessoa as $grupo_pessoa)
+            {
+                $grupos[] = $grupo_pessoa->descricao;
+            }
+        }
+
+        return implode(",", $grupos);
+    }
+
+    public function get_grupos_pessoa_array()
+    {
+        $grupos_pessoa = $this->getGruposPessoa();
+
+        $grupos = [];
+        if ($grupos_pessoa)
+        {
+            foreach ($grupos_pessoa as $grupo_pessoa)
+            {
+                $grupos[] = $grupo_pessoa->id;
+            }
+        }
+
+        return $grupos;
+    }
+
+    public function get_grupos_pessoa_list()
+    {
+        $list = new TElement('ul');
+        $grupos_pessoa = $this->getGruposPessoa();
+
+        if ($grupos_pessoa)
+        {
+            foreach ($grupos_pessoa as $grupo_pessoa)
+            {
+                $tem_list = new TElement('li');
+                $tem_list->add($grupo_pessoa->descricao);
+                $list->add($tem_list);
+            }
+        }
+
+        return $list;
+    }
+
     /**
      * Method addRepresentante
      * Add a Pessoas to the Imoveis
@@ -350,7 +405,7 @@ class Pessoas extends TRecord
         $object->representante_id = $representante->id;
         $object->store();
     }
-    
+
     /**
      * Method getRepresentante
      * Return the Imoveis' Pessoas's
@@ -360,7 +415,7 @@ class Pessoas extends TRecord
     {
         return $this->representantes;
     }
-    
+
     /**
      * Add a GrupoPessoas to the pessoa
      * @param $object Instance of GruposPessoa
@@ -372,7 +427,7 @@ class Pessoas extends TRecord
         $object->pessoa_id = $this->id;
         $object->store();
     }
-    
+
     /**
      * Return the pessoa' grupo's
      * @return Collection of GruposPessoa
@@ -381,23 +436,7 @@ class Pessoas extends TRecord
     {
         return parent::loadAggregate('GruposPessoa', 'PessoasGruposPessoa', 'pessoa_id', 'grupo_pessoa_id', $this->id);
     }
-    
-    public function setGruposPessoa()
-    {
-        $grupos_pessoa = PessoasGruposPessoa::where('pessoa_id', '=', $this->id)->load();
-        
-        if ($grupos_pessoa)
-        {
-            $grupos = [];
-            foreach ($grupos_pessoa as $grupo_pessoa)
-            {
-                $grupo = new GruposPessoa($grupo_pessoa->grupo_pessoa_id);
-                $grupos[] = $grupo->descricao;
-            }
-            $this->grupos_pessoa = implode("\n", $grupos);
-        }
-    }
-    
+
     /**
      * Reset aggregates
      */
@@ -406,7 +445,7 @@ class Pessoas extends TRecord
         Representantes::where('pessoa_id', '=', $this->id)->delete();
         PessoasGruposPessoa::where('pessoa_id', '=', $this->id)->delete();
     }
-    
+
     /**
      * Load the object and its aggregates
      * @param $id object ID
@@ -430,11 +469,11 @@ class Pessoas extends TRecord
         $id = isset($id) ? $id : $this->id;
         parent::deleteComposite('Representantes', 'pessoa_id', $id);
         parent::deleteComposite('PessoasGruposPessoa', 'pessoa_id', $id);
-    
+
         // delete the object itself
         parent::delete($id);
     }
-    
+
     public function store()
     {
         $this->cpfcnpj = FuncoesExtras::retiraFormatacao($this->cpfcnpj);
@@ -446,33 +485,33 @@ class Pessoas extends TRecord
         {
             $this->cpfcnpj = FuncoesExtras::mask($this->cpfcnpj, '##.###.###/####-##');
         }
-                
-        $endereco = '';
-        
+
+        /*$endereco = '';
+
         $endereco = $this->rua;
-        
+
         if (!empty($this->numero))
         {
             $endereco .= ', ' . $this->numero;
         }
-                        
+
         if (!empty($this->bairro))
         {
             $endereco .= ' - ' . $this->bairro;
         }
-                        
+
         if (!empty($this->cidade))
         {
             $endereco .= "\n" . $this->cidade;
         }
-                            
+
         if (!empty($this->estado))
         {
             TTransaction::close();
             TTransaction::open('cep');
-        
+
             $estados = Estados::where('sigla','=', $this->estado)->load();
-            
+
             if ($estados)
             {
                 foreach ($estados as $estado)
@@ -481,79 +520,75 @@ class Pessoas extends TRecord
                     $this->pais = $pais->sigla;
                 }
             }
-            
+
             TTransaction::close();
             TTransaction::open(TSession::getValue('unit_database'));
             
             $endereco .= ' - ' . $this->estado;
         }
-                            
+
         if (!empty($this->cep))
         {
             $endereco .= "\n" . $this->cep;
         }
-               
+
         $this->endereco = $endereco;
-                
+
         $contato = array();
-                
+
         if (!empty($this->fone1))
         {
             $contato[] = $this->fone1;
         }
-        
+
         if (!empty($this->fone2))
         {
             $contato[] = $this->fone2;
         }
-        
+
         if (!empty($this->fone3))
         {
             $contato[] = $this->fone3;
         }
-                    
+
         if (!empty($this->email))
         {
             $contato[] = $this->email;
         }
-                    
+
         if (!empty($this->site))
         {
             $contato[] = $this->site;
         }
-                
-        $this->contato = implode("\n", $contato);
-        
-        parent::store();
-        
-        $this->setGruposPessoa();
-        
+
+        $this->contato = implode("\n", $contato);*/
+
         parent::store();
     }
-    
+
     public static function onImportData()
     {
         try
         {
             $unit_id = TSession::getValue('userunitid');
             switch ($unit_id)
-            {                    
+            {
                 case 1:
                     TTransaction::open('caeb');
                     $conn = TTransaction::get();
-                    
+
                     $query = "select * from person";
                     $results = $conn->query($query);
-                    
+
                     TTransaction::close();
-                    
+
                     TTransaction::open(TSession::getValue('unit_database'));
-                    
+
                     $repository = new TRepository('Pessoas');
                     $repository->delete();
-                    
+
                     TTransaction::close();
-                    
+
                     if ($results)
                     {
                         foreach ($results as $result)
@@ -565,36 +600,36 @@ class Pessoas extends TRecord
                                 case 'CASADO(A)':
                                     $estado_civil_id = 1;
                                     break;
-                                    
+
                                 case 'UNIÃO ESTAVEL':
                                     $estado_civil_id = 2;
                                     break;
-                                    
+
                                 case 'SOLTEIRO(A)':
                                     $estado_civil_id = 3;
                                     break;
-                                    
+
                                 case 'SEPARADO(A) JUDICIALMENTE':
                                     $estado_civil_id = 4;
                                     break;
-                                    
+
                                 case 'DIVORCIADO(A)':
                                     $estado_civil_id = 5;
                                     break;
-                                    
+
                                 case 'VIÚVO(A)':
                                     $estado_civil_id = 6;
                                     break;
-                                    
+
                                 case 'DESQUITADO(A)':
                                     $estado_civil_id = 7;
                                     break;
-                                    
+
                                 default:
                                     $estado_civil_id = 0;
                                     break;
                             }
-                            
+
                             $pessoa = new Pessoas();
                             $pessoa->id = $result['id'];
                             $pessoa->tipo = 'F';
@@ -615,18 +650,18 @@ class Pessoas extends TRecord
                             $pessoa->dtcadastro = $result['registerdate'];   
                             $pessoa->grupos_pessoa = $result['assignmenter'] == 'S' ? 'TAREFEIRO' : 'PACIENTE';
                             $pessoa->store();
-                            
+
                             $grupo = new PessoasGruposPessoa();
                             $grupo->pessoa_id = $pessoa->id;
                             $grupo->grupo_pessoa_id = $result['assignmenter'] == 'S' ? 1 : 2;
                             $grupo->store();
-                            
+
                             TTransaction::close();
                         }
                     }
-                    
+
                     break;
-                    
+
                 case 2:
                     break;
                 case 3:
@@ -638,7 +673,7 @@ class Pessoas extends TRecord
                 case 6:
                     $target_folder = 'tmp/CSV/';
                     $target_file   = $target_folder . 'Pessoas.csv';
-                    
+
                     $i = 1;
                     $linhas = file($target_file);
                     foreach ($linhas as $linha)
@@ -700,13 +735,13 @@ class Pessoas extends TRecord
                                     {
                                         $pessoa->local_trabalho_id = (int) $object->id;
                                     }
-                                } 
-                                else  
+                                }
+                                else
                                 {
                                     $local_trabalho = new LocaisTrabalho();
                                     $local_trabalho->nome = trim($sep[24]);
                                     $local_trabalho->store();
-                                    
+
                                     $pessoa->fabricante_id = (int) $local_trabalho->id; 
                                 }
                             }
@@ -739,5 +774,5 @@ class Pessoas extends TRecord
             new TMessage('error', $e->getMessage());
             TTransaction::rollback();
         }
-    }    
+    }
 }

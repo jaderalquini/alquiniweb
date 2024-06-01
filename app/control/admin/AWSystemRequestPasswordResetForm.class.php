@@ -79,7 +79,7 @@ class AWSystemRequestPasswordResetForm extends TPage
         $a->href = 'http://web.alquini.com.br';
         $nav->add($a);
         $img = new TElement('img');
-        $img->src = 'app/templates/alquiniweb1/img/logo.png';
+        $img->src = 'app/templates/alquiniweb/img/logo.png';
         $img->width = '350';
         $a->add($img);
         $wrapper->add($this->form);

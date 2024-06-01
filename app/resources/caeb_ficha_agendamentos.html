@@ -1,0 +1,122 @@
+<!--[main]-->
+<style>
+.table>thead>tr>th
+{
+    border-bottom: 0;
+}
+
+.table-bordered, .table-bordered th, .table-bordered td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+body {
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 10px;
+    line-height: 1.42857143;
+}
+
+.tdatagrid_cell
+{
+    text-decoration:none;
+    color:#212529;
+}
+</style>
+<p><b>FICHA DE AGENDAMENTO TERAPIA TAREFEIRO - CAEB</b>(obrigatório a apresentação deste para retirada de senha)</p>
+<table width="100%">
+    <tr>
+        <td>
+            Nome do Tarefeiro: {$NOME}
+        </td>
+        <td style="text-align: right">
+            Data: {$DATA}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Nome Atendente Fraterno: {$ATENDENTE}
+        </td>
+        <td style="text-align: right">
+            Retornar em: {$RETORNAR} Dia da semana {$DIASEMANA}
+        </td>
+    </tr>
+</table>
+<table width="100%" class="table table-bordered">
+    <tr>
+        <th>
+            TERAPIA
+        </th>
+        <th style="text-align: center;">
+            Quant.
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+    </tr>
+    <!--[TERAPIAS]-->
+    <tr>
+        <td>
+            {$NOME}
+        </td>
+        <td style="text-align: center;">
+            {$QUANTIDADE}
+        </td>
+        <td style="text-align: center;">
+            {$DATA1}
+        </td>
+        <td style="text-align: center;">
+            {$DATA2}
+        </td>
+        <td style="text-align: center;">
+            {$DATA3}
+        </td>
+        <td style="text-align: center;">
+            {$DATA4}
+        </td>
+        <td style="text-align: center;">
+            {$DATA5}
+        </td>
+        <td style="text-align: center;">
+            {$DATA6}
+        </td>
+        <td style="text-align: center;">
+            {$DATA7}
+        </td>
+        <td style="text-align: center;">
+            {$DATA8}
+        </td>
+    </tr>
+    <!--[/TERAPIAS]-->
+    
+</table>
+<ol>
+   <li><b>Se você tiver agendamento para a Triagem Cirurgia é obrigatório CÓPIA DO LAUDO MÉDICO, sem a cópia não seria possível a análise.</b></li>
+   <li>Seja solidário de preferência para Idosos e pacientes muito debilitados.</li>
+   <li>Procure marcar as terapias fora do teu dia de trabalho.</li>
+   <li>Caso você não possa comparecer por favor ligue para desmarcar sua terapia 47-3275-0001</li>
+</ol>
+<!--[/main]-->

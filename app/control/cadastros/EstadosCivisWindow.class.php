@@ -16,13 +16,11 @@ class EstadosCivisWindow extends TWindow
     function __construct()
     {
         parent::__construct();
-        parent::setTitle( AdiantiCoreTranslator::translate('Civil Status') . ': ' .
-                          AdiantiCoreTranslator::translate('New Record') );
+        parent::setTitle('Estado Civil: Novo Registro');
         parent::setSize(0.7, null);
         
         $this->setDatabase(TSession::getValue('unit_database'));              // defines the database
-        $this->setActiveRecord('EstadosCivis');     // defines the active record
-        $this->form->setClientValidation(TRUE);
+        $this->form->enableClientValidation(TRUE);
         
         // creates the form
         $this->form = new BootstrapFormBuilder('form_EstadosCivis');

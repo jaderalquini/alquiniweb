@@ -1,0 +1,586 @@
+<!--[main]-->
+<style>
+.table>thead>tr>th
+{
+    border-bottom: 0;
+}
+
+.table-bordered, .table-bordered th, .table-bordered td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+body {
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 10px;
+    line-height: 1.42857143;
+    margin-top: 130px;
+}
+
+.tdatagrid_cell
+{
+    text-decoration:none;
+    color:#212529;
+}
+.cabecalho {
+    text-align: center;
+    font-weight: bold;
+}
+.header {
+    padding: 20px; /* Espaçamento interno do cabeçalho */
+    text-align: center; /* Centralizar o texto no cabeçalho */
+    position: fixed; /* Fixar o cabeçalho na página */
+    width: 100%; /* Ocupar toda a largura da página */
+    top: 0; /* Fixar no topo da página */
+}
+</style>
+<table class="header">
+    <tr>
+        <th>
+            ATENDIMENTO FRATERNO<br>
+            Ficha do Paciente
+        </th>
+        <th width="120px">
+            <img src="{$LOGO}" width="100px">
+        </th>
+    </tr>
+</table>
+<p><b>Paciente preencher com LETRA DE FORMA (legível)</b></p>
+<table width="100%">
+    <tr>
+        <td>
+            Nome:{$NOME}
+        </td>
+        <td>
+            Data Nas:{$DTNASC}
+        </td>
+        <td>
+            Idade:{$IDADE}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            CPF:{$CPFCNPJ}
+        </td>
+        <td>
+            R/G:{$RG}
+        </td>
+        <td>
+            Tel celular/fixo:{$FONE1}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            Cidade:{$CIDADE}
+        </td>
+        <td>
+            Estado:{$ESTADO}
+        </td>
+    </tr>
+</table>
+<hr>
+<p>
+1.	O que te motivou a procurar o CAEB?............................................................................................................................................................................................<br>
+..............................................................................................................................................................................................................................................................
+</p>
+<p>
+2.	Qual o problema que lhe traz ao tratamento CAEB?<br>
+..............................................................................................................................................................................................................................................................
+</p>
+<p>
+3.	O que você espera do tratamento no CAEB?.................................................................................................................................................................................<br>
+..............................................................................................................................................................................................................................................................
+</p>
+<table width="100%">
+    <tr>
+        <td width="50%">
+            4.	Você conhece da doutrina espírita?
+        </td>
+        <td width="50%">
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">
+            5.	Você já fez algum tratamento espiritual? 
+        </td>
+        <td width="50%">
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            6.	Tem dores de cabeça?
+        </td>
+        <td>
+            (   ) Não (   ) Sim Quantas vezes por mês? ..........vezes. 
+        </td>
+    </tr>
+    <tr>
+        <td>
+            7.	Usa medicamento controlado?
+        </td>
+        <td>
+            (   ) Não (   ) Sim Qual? ................................................................................................................................................
+        </td>
+    </tr>
+    <tr>
+        <td>
+            8.	Você está tendo acompanhamento médico?
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            9.	Você tem algum laudo médico para:
+        </td>
+        <td>
+            (   ) Ansiedade         (   )Depressão       (   ) Síndrome do Pânico
+        </td>
+    </tr>
+    <tr>
+        <td>
+            10.	Alguma vez pensou em desistir de viver?
+        </td>
+        <td>
+            (   ) Não   (   ) Sim Qual o motivo? ...................................................................................................................................
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"as>
+            ............................................................................................................................................................................................................................................................
+        </td>
+    </tr>
+    <tr>
+        <td>
+            11.	Tem pressentimentos?
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            12.	Você vê vultos? 
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            13.	Ouve vozes?
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            14.	Sente alguém ao seu lado?
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            15.	Sente arrepios?  
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            16.	Você muda de humor facilmente?
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+    <tr>
+        <td>
+            17.	Você tem:
+        </td>
+        <td>
+            (   ) Fibromialgia   (   ) Artrite   (   ) Artrose   (   ) Reumatismo
+        </td>
+    </tr>
+    <tr>
+        <td>
+            18.	Se for mulher, favor informar se está grávida.
+        </td>
+        <td>
+            (   ) Não (   ) Sim
+        </td>
+    </tr>
+</table>
+<p>
+    <b>IMPORTANTE:</b> Declaro estar ciente que o CAEB não realiza diagnóstico médico e o acompanhamento com o meu médico deve continuar. Que em algumas terapias ocorrem o contato em meu corpo de forma sutil, respeitando a intimidade pessoal. Que este documento é um documento sigiloso assim como a conversa com o atendente fraterno.
+</p>
+<p style="text-align: center;">
+    <b>
+        Assinatura: __________________________________Data {$DATA}<br>
+        Nossa Missão: CURA ATRAVÉS DO AMOR. Seja bem-vindo!
+    </b>
+</p>
+<table width="100%">
+    <tr>
+        <td colspan="5">
+            19. Psicogerador Radiônico  (contornar o número lido)
+        </td>
+    </tr>
+    <tr>
+        <td width="10%">
+            Gráfico 1 :   
+        </td>
+        <td width="50%" style="letter-spacing: 4px;">
+            1      3      5      7 
+        </td>
+        <td width="10%">
+            Gráfico 2 :
+        </td>
+        <td style="letter-spacing: 4px;">
+            1        2        3
+        </td>
+    </tr>
+</table>
+<table width="100%">
+    <tr>
+        <td width="10%">
+            Gráfico 3 :
+        </td>
+        <td colspan="4" style="letter-spacing: 4px;">
+            1      2      3      4      5      6      7      8      9      10
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Gráfico 4 :
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>1</b>     (  1  2  3  4  )     
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>2</b>     (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>3</b>     (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>4</b>     (  1  2  3  4  )
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>5</b>     (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+             <b>6</b>     (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>7</b>     (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>8</b>     (  1  2  3  4  )
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>9</b>     (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>10</b>    (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>11</b>     (  1  2  3  4  )
+        </td>
+        <td style="letter-spacing: 4px;">
+            <b>12</b>     (  1  2  3  4  )
+        </td>
+    </tr>
+</table>
+<br>
+<table width="100%">
+    <tr>
+        <td>
+            20.	Observações:...........................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................<br>
+    ........................................................................................................................................................................................................................................................
+        </td>
+    </tr>
+</table>
+<table width="100%">
+    <tr>
+        <td>
+            21.	Terapias indicadas:
+        </td>
+    </tr>
+</table>
+<table width="100%" class="table table-bordered">
+    <tr>
+        <th>
+            TERAPIA
+        </th>
+        <th style="text-align: center;">
+            Quant.
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+        <th style="text-align: center;">
+            Data
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+        <td style="text-align: center;">
+            <br>
+        </td>
+    </tr>
+    <!--[TERAPIAS]-->
+    <tr>
+        <td>
+            {$NOME}
+        </td>
+        <td style="text-align: center;">
+            {$QUANTIDADE}
+        </td>
+        <td style="text-align: center;">
+            {$DATA1}
+        </td>
+        <td style="text-align: center;">
+            {$DATA2}
+        </td>
+        <td style="text-align: center;">
+            {$DATA3}
+        </td>
+        <td style="text-align: center;">
+            {$DATA4}
+        </td>
+        <td style="text-align: center;">
+            {$DATA5}
+        </td>
+        <td style="text-align: center;">
+            {$DATA6}
+        </td>
+        <td style="text-align: center;">
+            {$DATA7}
+        </td>
+        <td style="text-align: center;">
+            {$DATA8}
+        </td>
+    </tr>
+    <!--[/TERAPIAS]-->
+    <tr>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+    </tr>
+    <tr>
+        <th>
+            Retorno Atendimento Fraterno
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+        <th>
+            <br>
+        </th>
+    </tr>
+</table>
+<p>
+    21.	Floral indicado:
+</p>
+<table width="40%" class="table table-bordered">
+    <tr>
+        <td style="text-align: center;">
+            <b>
+                Floral 1
+            </b>
+        </td>
+        <td style="text-align: center;">
+            <b>
+                Floral 2
+            </b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br>
+        </td>
+        <td>
+            <br>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br>
+        </td>
+        <td>
+            <br>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br>
+        </td>
+        <td>
+            <br>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br>
+        </td>
+        <td>
+            <br>
+        </td>
+    </tr>
+</table>
+<p style="text-align: center;">
+    ____________________________________<br>
+    <b>Nome e Assinatura do Atendente Fraterno</b><br>
+    Data {$DATA}
+</p>
+<!--[/main]-->

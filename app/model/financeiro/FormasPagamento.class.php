@@ -18,6 +18,5 @@ class FormasPagamento extends TRecord
     {
         parent::__construct($id, $callObjectLoad);
         parent::addAttribute('descricao');
-        parent::addAttribute('pedeconta');
     }
 }

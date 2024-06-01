@@ -187,7 +187,8 @@ Template.onAfterLoad = function(url, data) {
 Template.onAfterPost = Template.onAfterLoad;
 
 Template.closeRightPanel = function () {
-    let view_width     = $( document ).width() >= 800 ? 780 : ($( document ).width());
+    //let view_width = $( document ).width() >= 800 ? 780 : ($( document ).width());
+    let view_width = 80 %;
     let curtain_offset = $( document ).width() >= 800 ? 20  : 0;
     
     if ($('#adianti_right_panel > [page_name]').length > 0) {

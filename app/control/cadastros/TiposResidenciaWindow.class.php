@@ -16,16 +16,15 @@ class TiposResidenciaWindow extends TWindow
     function __construct()
     {
         parent::__construct();
-        parent::setTitle( AdiantiCoreTranslator::translate('Residence Type') . ': ' .
-                          AdiantiCoreTranslator::translate('New Record') );
-        parent::setSize(0.7, null);        
-        
+        parent::setTitle('Tipo de Residência: Novo Registro');
+        parent::setSize(0.7, null);
+
         $this->setDatabase(TSession::getValue('unit_database'));              // defines the database
         $this->setActiveRecord('TiposResidencia');     // defines the active record
-        $this->form->setClientValidation(TRUE);
-        
+
         // creates the form
         $this->form = new BootstrapFormBuilder('form_TiposResidencia');
+        $this->form->enableClientValidation();
 
         // create the form fields
         $id = new TEntry('id');

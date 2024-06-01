@@ -535,6 +535,8 @@ class PessoasForm extends TPage
             
             // close the transaction
             TTransaction::close();
+
+            $this->afterSaveAction = new TAction(['PessoasList', 'onReload']);
             
             // shows the success message
             if (isset($this->useMessages) AND $this->useMessages === false)

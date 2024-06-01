@@ -3,7 +3,7 @@
  * GruposPessoaList Listing
  * @author  <your name here>
  */
-class GruposPessoaList extends TPage
+class GruposPessoaList extends TStandardList
 {
     protected $form;     // registration form
     protected $datagrid; // listing
@@ -17,7 +17,7 @@ class GruposPessoaList extends TPage
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->setDatabase(TSession::getValue('unit_database'));            // defines the database
         $this->setActiveRecord('GruposPessoa');   // defines the active record
         $this->setDefaultOrder('id', 'asc');         // defines the default order
@@ -39,7 +39,7 @@ class GruposPessoaList extends TPage
         $this->form->addFields( [new TLabel(_t('Id'))], [$id] );
         $this->form->addFields( [new TLabel(_t('Description'))], [$descricao] );
 
-        $id->setSize('100%');
+        $id->setSize(100);
         $descricao->setSize('100%');
 
         // keep the form filled during navigation with session data
@@ -57,7 +57,7 @@ class GruposPessoaList extends TPage
 
         // creates the datagrid columns
         $column_id = new TDataGridColumn('id', _t('Id'), 'right', 100);
-        $column_descricao = new TDataGridColumn('descricao', 'Descricao', 'left');
+        $column_descricao = new TDataGridColumn('descricao', _t('Description'), 'left');
 
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_id);
@@ -69,15 +69,15 @@ class GruposPessoaList extends TPage
         $action1 = new TDataGridAction([$this, 'onSelect'], ['id' => '{id}', 'register_state' => 'false']);
         //$action1->setUseButton(TRUE);
         $action1->setButtonClass('btn btn-default');
-        
+
         // add the actions to the datagrid
         $this->datagrid->addAction($action1, _t('Select'), 'far:square fa-fw black');
-        
+
         // creates the datagrid column actions
         $order_id = new TAction(array($this, 'onReload'));
         $order_id->setParameter('order', 'id');
         $column_id->setAction($order_id);
-        
+
         $order_descricao = new TAction(array($this, 'onReload'));
         $order_descricao->setParameter('order', 'descricao');
         $column_descricao->setAction($order_descricao);
@@ -89,7 +89,7 @@ class GruposPessoaList extends TPage
         $action_edit->setImage('far:edit blue');
         $action_edit->setField('id');
         $this->datagrid->addAction($action_edit);
-        
+
         // create DELETE action
         $action_del = new TDataGridAction(array($this, 'onDelete'));
         $action_del->setButtonClass('btn btn-default');
@@ -113,18 +113,19 @@ class GruposPessoaList extends TPage
 
         $btnf = TButton::create('find', [$this, 'onSearch'], '', 'fa:search');
         $btnf->style= 'height: 37px; margin-right:4px;';
-        
-        $form_search = new TForm('form_search_name');
+
+        $form_search = new TForm('form_search_descricao');
         $form_search->style = 'float:left;display:flex';
         $form_search->add($descricao, true);
         $form_search->add($btnf, true);
-        
+
         $panel->addHeaderWidget($form_search);
-        
-        $panel->addHeaderActionLink('', new TAction(['EstadosCivisForm', 'onEdit'], ['register_state' => 'false']), 'fa:plus');
+
+        $panel->addHeaderActionLink(_t('New'), new TAction(['GruposPessoaForm', 'onEdit'], ['register_state' => 'false']), 'fa:plus green');
         $panel->addHeaderActionLink( _t('Delete Selected'), new TAction([$this, 'onDeleteSelected']), 'far:trash-alt red');
         $this->filter_label = $panel->addHeaderActionLink('Filtros', new TAction([$this, 'onShowCurtainFilters']), 'fa:filter');
-        
+        $panel->addHeaderActionLink( _t('Clear Filter'), new TAction(array($this, 'onClearFilter')), 'fa:ban red');
+
         // header actions
         $dropdown = new TDropDown(_t('Export'), 'fa:list');
         $dropdown->style = 'height:37px';
@@ -134,7 +135,7 @@ class GruposPessoaList extends TPage
         $dropdown->addAction( _t('Save as PDF'), new TAction([$this, 'onExportPDF'], ['register_state' => 'false', 'static'=>'1']), 'far:file-pdf fa-fw red' );
         $dropdown->addAction( _t('Save as XML'), new TAction([$this, 'onExportXML'], ['register_state' => 'false', 'static'=>'1']), 'fa:code fa-fw green' );
         $panel->addHeaderWidget( $dropdown );
-        
+
         // header actions
         $dropdown = new TDropDown( TSession::getValue(__CLASS__ . '_limit') ?? '10', '');
         $dropdown->style = 'height:37px';
@@ -146,23 +147,29 @@ class GruposPessoaList extends TPage
         $dropdown->addAction( 100,  new TAction([$this, 'onChangeLimit'], ['register_state' => 'false', 'static'=>'1', 'limit' => '100']) );
         $dropdown->addAction( 1000, new TAction([$this, 'onChangeLimit'], ['register_state' => 'false', 'static'=>'1', 'limit' => '1000']) );
         $panel->addHeaderWidget( $dropdown );
-        
+
         if (TSession::getValue(get_class($this).'_filter_counter') > 0)
         {
             $this->filter_label->class = 'btn btn-primary';
             $this->filter_label->setLabel('Filtros ('. TSession::getValue(get_class($this).'_filter_counter').')');
         }
-        
+
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 100%';
         $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         //$container->add($this->form);
         $container->add($panel);
-        
+
         parent::add($container);
     }
-    
+
+    public function onClearFilter()
+    {
+        $this->form->clear();
+        $this->onSearch();
+    }
+
     /**
      * Save the object reference in session
      */
@@ -210,7 +217,7 @@ class GruposPessoaList extends TPage
         
         return $value;
     }
-    
+
     public function onDeleteSelected($param)
     {
         $selected_objects = TSession::getValue(__CLASS__.'_selected_objects');
@@ -220,7 +227,7 @@ class GruposPessoaList extends TPage
             new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), new TAction(array($this, 'deleteSelected')));
         }
     }
-    
+
     /**
      * Delete selected records
      */
@@ -233,7 +240,7 @@ class GruposPessoaList extends TPage
             TTransaction::open($this->database);
             foreach ($selected_objects as $id)
             {
-                $object = GruposPessoa::find($id);
+                $object = EstadosCivis::find($id);
                 if ($object)
                 {
                     $object->delete();
@@ -241,9 +248,66 @@ class GruposPessoaList extends TPage
             }
             TTransaction::close();
             
-            new TMessage('info', _t('Records deleted'));
+            new TMessage('info', 'Records deleted');
         }
         TSession::setValue(__CLASS__.'_selected_objects', []);
         $this->onReload();
+    }
+
+    public function onAfterSearch($datagrid, $options)
+    {
+        if (TSession::getValue(get_class($this).'_filter_counter') > 0)
+        {
+            $this->filter_label->class = 'btn btn-primary';
+            $this->filter_label->setLabel('Filtros ('. TSession::getValue(get_class($this).'_filter_counter').')');
+        }
+        else
+        {
+            $this->filter_label->class = 'btn btn-default';
+            $this->filter_label->setLabel('Filtros');
+        }
+        
+        if (!empty(TSession::getValue(get_class($this).'_filter_data')))
+        {
+            $obj = new stdClass;
+            $obj->descricao = TSession::getValue(get_class($this).'_filter_data')->descricao;
+            TForm::sendData('form_search_descricao', $obj);
+        }
+    }
+
+    public static function onChangeLimit($param)
+    {
+        TSession::setValue(__CLASS__ . '_limit', $param['limit'] );
+        AdiantiCoreApplication::loadPage(__CLASS__, 'onReload');
+    }
+
+    public static function onShowCurtainFilters($param = null)
+    {
+        try
+        {
+            // create empty page for right panel
+            $page = new TPage;
+            $page->setTargetContainer('adianti_right_panel');
+            $page->setProperty('override', 'true');
+            $page->setPageName(__CLASS__);
+            
+            $btn_close = new TButton('closeCurtain');
+            $btn_close->onClick = "Template.closeRightPanel();";
+            $btn_close->setLabel("Fechar");
+            $btn_close->setImage('fas:times');
+            
+            // instantiate self class, populate filters in construct 
+            $embed = new self;
+            $embed->form->addHeaderWidget($btn_close);
+            
+            // embed form inside curtain
+            $page->add($embed->form);
+            $page->setIsWrapped(true);
+            $page->show();
+        }
+        catch (Exception $e) 
+        {
+            new TMessage('error', $e->getMessage());    
+        }
     }
 }

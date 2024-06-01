@@ -11,14 +11,14 @@ class LocaisTrabalhoList extends TStandardList
     protected $formgrid;
     protected $deleteButton;
     protected $transformCallback;
-    
+
     /**
      * Page constructor
      */
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->setDatabase(TSession::getValue('unit_database'));            // defines the database
         $this->setActiveRecord('LocaisTrabalho');   // defines the active record
         $this->setDefaultOrder('id', 'asc');         // defines the default order
@@ -31,30 +31,25 @@ class LocaisTrabalhoList extends TStandardList
         // creates the form
         $this->form = new BootstrapFormBuilder('form_search_LocaisTrabalho');
         $this->form->setFormTitle(_t('Civil Status'));
-        
+
         $id = new TNumeric('id', 0, ',', '.');
         $nome = new TEntry('nome');
-        $fone = new TEntry('fone');
-        $endereco = new TEntry('endereco');
 
         // add the fields
         $this->form->addFields( [new TLabel(_t('Id'))], [$id] );
         $this->form->addFields( [new TLabel(_t('Name'))], [$nome] );
-        $this->form->addFields( [new TLabel(_t('Phone'))], [$fone] );
-        $this->form->addFields( [new TLabel(_t('Address'))], [$endereco] );
 
-        $id->setSize('100%');
+        $id->setSize(100);
         $nome->setSize('100%');
-        $fone->setSize('100%');
-        $endereco->setSize('100%');
 
         // keep the form filled during navigation with session data
-        $this->form->setData( TSession::getValue('SystemUser_filter_data') );
-        
+        $this->form->setData( TSession::getValue('LocaisTrabalho_filter_data') );
+
         // add the search form actions
         $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
-        
+        $this->form->addActionLink( _t('Clear Filter'), new TAction(array($this, 'onClearFilter')), 'fa:ban red');
+
         // creates a DataGrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         //$this->datagrid->datatable = 'true';
@@ -74,42 +69,42 @@ class LocaisTrabalhoList extends TStandardList
         $this->datagrid->addColumn($column_endereco);
 
         $column_id->setTransformer([$this, 'formatRow']);
-        
+
         $column_endereco->setTransformer( function ($value, $object) {
             if ($object->rua)
             {
-                
+
                 $endereco = $object->rua;
-                
+
                 if (!empty($object->numero))
                 {
                     $endereco .= ', ' . $object->numero;
                 }
-                
+
                 if (!empty($object->bairro))
                 {
                     $endereco .= ' - ' . $object->bairro;
                 }
-                
+
                 if (!empty($object->cidade))
                 {
                     $endereco .= '<br>' . $object->cidade;
                 }
-                
+
                 if (!empty($object->estado))
                 {
                     $endereco .= ' - ' . $object->estado;
                 }
-                
+
                 if (!empty($object->cep))
                 {
                     $endereco .= '<br>' . $object->cep;   
                 }
-                
+
                 $endereco_link = str_replace('<br>', ', ', $endereco);                
                 $endereco_link = explode(' ', $endereco_link);
                 $endereco_link = 'https://www.google.com/maps/search/' . implode('+', $endereco_link);
-               
+
                 $icon  = "<i class='fa fa-map-marked-alt' aria-hidden='true'></i>";
                 return "{$icon} <a generator='adianti' href='index.php?class=PessoasList&method=openURL&url={$endereco_link}&static=1'>$endereco</td></a>";
             }
@@ -119,27 +114,27 @@ class LocaisTrabalhoList extends TStandardList
         $action1 = new TDataGridAction([$this, 'onSelect'], ['id' => '{id}', 'register_state' => 'false']);
         //$action1->setUseButton(TRUE);
         $action1->setButtonClass('btn btn-default');
-        
+
         // add the actions to the datagrid
         $this->datagrid->addAction($action1, _t('Select'), 'far:square fa-fw black');
-        
+
         // creates the datagrid column actions
         $order_id = new TAction(array($this, 'onReload'));
         $order_id->setParameter('order', 'id');
         $column_id->setAction($order_id);
-        
+
         $order_nome = new TAction(array($this, 'onReload'));
         $order_nome->setParameter('order', 'nome');
         $column_nome->setAction($order_nome);
         
         // create EDIT action
-        $action_edit = new TDataGridAction(array('EstadosCivisForm', 'onEdit'), ['register_state' => 'false'] );
+        $action_edit = new TDataGridAction(array('LocaisTrabalhoForm', 'onEdit'), ['register_state' => 'false'] );
         $action_edit->setButtonClass('btn btn-default');
         $action_edit->setLabel(_t('Edit'));
         $action_edit->setImage('far:edit blue');
         $action_edit->setField('id');
         $this->datagrid->addAction($action_edit);
-        
+
         // create DELETE action
         $action_del = new TDataGridAction(array($this, 'onDelete'));
         $action_del->setButtonClass('btn btn-default');
@@ -147,10 +142,10 @@ class LocaisTrabalhoList extends TStandardList
         $action_del->setImage('far:trash-alt red');
         $action_del->setField('id');
         $this->datagrid->addAction($action_del);
-        
+
         // create the datagrid model
         $this->datagrid->createModel();
-        
+
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->enableCounters();
@@ -163,18 +158,19 @@ class LocaisTrabalhoList extends TStandardList
 
         $btnf = TButton::create('find', [$this, 'onSearch'], '', 'fa:search');
         $btnf->style= 'height: 37px; margin-right:4px;';
-        
-        $form_search = new TForm('form_search_name');
+
+        $form_search = new TForm('form_search_nome');
         $form_search->style = 'float:left;display:flex';
         $form_search->add($nome, true);
         $form_search->add($btnf, true);
-        
+
         $panel->addHeaderWidget($form_search);
-        
-        $panel->addHeaderActionLink('', new TAction(['LocaisTrabalhoForm', 'onEdit'], ['register_state' => 'false']), 'fa:plus');
+
+        $panel->addHeaderActionLink(_t('New'), new TAction(['LocaisTrabalhoForm', 'onEdit'], ['register_state' => 'false']), 'fa:plus green');
         $panel->addHeaderActionLink( _t('Delete Selected'), new TAction([$this, 'onDeleteSelected']), 'far:trash-alt red');
         $this->filter_label = $panel->addHeaderActionLink('Filtros', new TAction([$this, 'onShowCurtainFilters']), 'fa:filter');
-        
+        $panel->addHeaderActionLink( _t('Clear Filter'), new TAction(array($this, 'onClearFilter')), 'fa:ban red');
+
         // header actions
         $dropdown = new TDropDown(_t('Export'), 'fa:list');
         $dropdown->style = 'height:37px';
@@ -184,7 +180,7 @@ class LocaisTrabalhoList extends TStandardList
         $dropdown->addAction( _t('Save as PDF'), new TAction([$this, 'onExportPDF'], ['register_state' => 'false', 'static'=>'1']), 'far:file-pdf fa-fw red' );
         $dropdown->addAction( _t('Save as XML'), new TAction([$this, 'onExportXML'], ['register_state' => 'false', 'static'=>'1']), 'fa:code fa-fw green' );
         $panel->addHeaderWidget( $dropdown );
-        
+
         // header actions
         $dropdown = new TDropDown( TSession::getValue(__CLASS__ . '_limit') ?? '10', '');
         $dropdown->style = 'height:37px';
@@ -196,13 +192,13 @@ class LocaisTrabalhoList extends TStandardList
         $dropdown->addAction( 100,  new TAction([$this, 'onChangeLimit'], ['register_state' => 'false', 'static'=>'1', 'limit' => '100']) );
         $dropdown->addAction( 1000, new TAction([$this, 'onChangeLimit'], ['register_state' => 'false', 'static'=>'1', 'limit' => '1000']) );
         $panel->addHeaderWidget( $dropdown );
-        
+
         if (TSession::getValue(get_class($this).'_filter_counter') > 0)
         {
             $this->filter_label->class = 'btn btn-primary';
             $this->filter_label->setLabel('Filtros ('. TSession::getValue(get_class($this).'_filter_counter').')');
         }
-        
+
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 100%';
@@ -212,7 +208,13 @@ class LocaisTrabalhoList extends TStandardList
         
         parent::add($container);
     }
-    
+
+    public function onClearFilter()
+    {
+        $this->form->clear();
+        $this->onSearch();
+    }
+
     /**
      * Save the object reference in session
      */
@@ -220,7 +222,7 @@ class LocaisTrabalhoList extends TStandardList
     {
         // get the selected objects from session 
         $selected_objects = TSession::getValue(__CLASS__.'_selected_objects');
-        
+
         $id = $param['id'];
         if (isset($selected_objects[$id]))
         {
@@ -231,11 +233,11 @@ class LocaisTrabalhoList extends TStandardList
             $selected_objects[$id] = $id;
         }
         TSession::setValue(__CLASS__.'_selected_objects', $selected_objects); // put the array back to the session
-        
+
         // reload datagrids
         $this->onReload( func_get_arg(0) );
     }
-    
+
     /**
      * Highlight the selected rows
      */
@@ -260,7 +262,7 @@ class LocaisTrabalhoList extends TStandardList
         
         return $value;
     }
-    
+
     public function onDeleteSelected($param)
     {
         $selected_objects = TSession::getValue(__CLASS__.'_selected_objects');
@@ -270,7 +272,7 @@ class LocaisTrabalhoList extends TStandardList
             new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), new TAction(array($this, 'deleteSelected')));
         }
     }
-    
+
     /**
      * Delete selected records
      */
@@ -309,12 +311,12 @@ class LocaisTrabalhoList extends TStandardList
             $this->filter_label->class = 'btn btn-default';
             $this->filter_label->setLabel('Filtros');
         }
-        
+
         if (!empty(TSession::getValue(get_class($this).'_filter_data')))
         {
             $obj = new stdClass;
-            $obj->descricao = TSession::getValue(get_class($this).'_filter_data')->descricao;
-            TForm::sendData('form_search_descricao', $obj);
+            $obj->nome = TSession::getValue(get_class($this).'_filter_data')->nome;
+            TForm::sendData('form_search_nome', $obj);
         }
     }
 
@@ -333,16 +335,16 @@ class LocaisTrabalhoList extends TStandardList
             $page->setTargetContainer('adianti_right_panel');
             $page->setProperty('override', 'true');
             $page->setPageName(__CLASS__);
-            
+
             $btn_close = new TButton('closeCurtain');
             $btn_close->onClick = "Template.closeRightPanel();";
             $btn_close->setLabel("Fechar");
             $btn_close->setImage('fas:times');
-            
+
             // instantiate self class, populate filters in construct 
             $embed = new self;
             $embed->form->addHeaderWidget($btn_close);
-            
+
             // embed form inside curtain
             $page->add($embed->form);
             $page->setIsWrapped(true);

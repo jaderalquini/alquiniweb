@@ -831,7 +831,7 @@ class AdiantiTemplateTranslator
         $this->messages['pt'][] = 'Métodos mais lentos';
         $this->messages['pt'][] = 'Extensão não encontrada: ^1';
         //fim
-        
+
         $this->messages['es'] = [];
         $this->messages['es'][] = 'Archivo no encontrado';
         $this->messages['es'][] = 'Buscar';

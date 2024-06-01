@@ -11,7 +11,7 @@ class EstadosCivisList extends TStandardList
     protected $formgrid;
     protected $deleteButton;
     protected $transformCallback;
-    
+
     /**
      * Page constructor
      */
@@ -27,30 +27,31 @@ class EstadosCivisList extends TStandardList
         parent::addFilterField('id', '=', 'id'); // filterField, operator, formField
         parent::addFilterField('descricao', 'like', 'descricao'); // filterField, operator, formField
         parent::setLimit(TSession::getValue(__CLASS__ . '_limit') ?? 10);
-        
+
         parent::setAfterSearchCallback( [$this, 'onAfterSearch' ] );
 
         // creates the form
         $this->form = new BootstrapFormBuilder('form_search_EstadosCivis');
-        $this->form->setFormTitle(_t('Civil Status'));
-        
+        $this->form->setFormTitle(_t('Civils Status'));
+
         // create the form fields
-        $id = new TEntry('id');
+        $id = new TNumeric('id', 0, ',', '.');
         $descricao = new TEntry('descricao');
 
         // add the fields
         $this->form->addFields( [new TLabel(_t('Id'))], [$id] );
         $this->form->addFields( [new TLabel(_t('Description'))], [$descricao] );
 
-        $id->setSize('100%');
+        $id->setSize(100);
         $descricao->setSize('100%');
 
         // keep the form filled during navigation with session data
-        $this->form->setData( TSession::getValue('SystemUser_filter_data') );
-        
+        $this->form->setData( TSession::getValue('EstadosCivis_filter_data') );
+
         // add the search form actions
         $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
+        $this->form->addActionLink( _t('Clear Filter'), new TAction(array($this, 'onClearFilter')), 'fa:ban red');
 
         // creates a DataGrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
@@ -102,7 +103,7 @@ class EstadosCivisList extends TStandardList
 
         // create the datagrid model
         $this->datagrid->createModel();
-        
+
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->enableCounters();
@@ -115,18 +116,19 @@ class EstadosCivisList extends TStandardList
 
         $btnf = TButton::create('find', [$this, 'onSearch'], '', 'fa:search');
         $btnf->style= 'height: 37px; margin-right:4px;';
-        
-        $form_search = new TForm('form_search_name');
+
+        $form_search = new TForm('form_search_nome');
         $form_search->style = 'float:left;display:flex';
         $form_search->add($descricao, true);
         $form_search->add($btnf, true);
-        
+
         $panel->addHeaderWidget($form_search);
         
-        $panel->addHeaderActionLink('', new TAction(['EstadosCivisForm', 'onEdit'], ['register_state' => 'false']), 'fa:plus');
+        $panel->addHeaderActionLink(_t('New'), new TAction(['EstadosCivisForm', 'onEdit'], ['register_state' => 'false']), 'fa:plus green');
         $panel->addHeaderActionLink( _t('Delete Selected'), new TAction([$this, 'onDeleteSelected']), 'far:trash-alt red');
         $this->filter_label = $panel->addHeaderActionLink('Filtros', new TAction([$this, 'onShowCurtainFilters']), 'fa:filter');
-        
+        $panel->addHeaderActionLink( _t('Clear Filter'), new TAction(array($this, 'onClearFilter')), 'fa:ban red');
+
         // header actions
         $dropdown = new TDropDown(_t('Export'), 'fa:list');
         $dropdown->style = 'height:37px';
@@ -136,7 +138,7 @@ class EstadosCivisList extends TStandardList
         $dropdown->addAction( _t('Save as PDF'), new TAction([$this, 'onExportPDF'], ['register_state' => 'false', 'static'=>'1']), 'far:file-pdf fa-fw red' );
         $dropdown->addAction( _t('Save as XML'), new TAction([$this, 'onExportXML'], ['register_state' => 'false', 'static'=>'1']), 'fa:code fa-fw green' );
         $panel->addHeaderWidget( $dropdown );
-        
+
         // header actions
         $dropdown = new TDropDown( TSession::getValue(__CLASS__ . '_limit') ?? '10', '');
         $dropdown->style = 'height:37px';
@@ -148,13 +150,13 @@ class EstadosCivisList extends TStandardList
         $dropdown->addAction( 100,  new TAction([$this, 'onChangeLimit'], ['register_state' => 'false', 'static'=>'1', 'limit' => '100']) );
         $dropdown->addAction( 1000, new TAction([$this, 'onChangeLimit'], ['register_state' => 'false', 'static'=>'1', 'limit' => '1000']) );
         $panel->addHeaderWidget( $dropdown );
-        
+
         if (TSession::getValue(get_class($this).'_filter_counter') > 0)
         {
             $this->filter_label->class = 'btn btn-primary';
             $this->filter_label->setLabel('Filtros ('. TSession::getValue(get_class($this).'_filter_counter').')');
         }
-        
+
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 100%';
@@ -163,6 +165,12 @@ class EstadosCivisList extends TStandardList
         $container->add($panel);
         
         parent::add($container);
+    }
+
+    public function onClearFilter()
+    {
+        $this->form->clear();
+        $this->onSearch();
     }
 
     /**
@@ -266,7 +274,7 @@ class EstadosCivisList extends TStandardList
         {
             $obj = new stdClass;
             $obj->descricao = TSession::getValue(get_class($this).'_filter_data')->descricao;
-            TForm::sendData('form_search_descricao', $obj);
+            TForm::sendData('form_search_nome', $obj);
         }
     }
 

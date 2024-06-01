@@ -8,7 +8,7 @@ class LocaisTrabalhoWindow extends TWindow
     protected $form; // form
     
     use Adianti\Base\AdiantiStandardFormTrait; // Standard form methods
-    
+
     /**
      * Class constructor
      * Creates the page and the registration form
@@ -57,34 +57,34 @@ class LocaisTrabalhoWindow extends TWindow
         $bairro->setSize('100%');
         $cidade->setSize('80%');
         $estado->setSize('20%');
-        
+
         $id->setEditable(FALSE);
         $nome->autofocus = 'autofocus';
         $nome->forceUpperCase(); 
         $fone->class = 'phones';
         $cep->setMask('99999-999');
         $cep->setExitAction(new TAction( [ $this, 'onExitCep' ] ));
-        
+
         // validations
         $nome->addValidation(_t('Name'), new TRequiredValidator);
-        
+
         /** samples
          $fieldX->addValidation( 'Field X', new TRequiredValidator ); // add validation
          $fieldX->setSize( '100%' ); // set size
          **/
-         
+    
         // create the form actions
         $btn = $this->form->addAction(_t('Save'), new TAction([$this, 'onSave']), 'far:save');
         $btn->class = 'btn btn-sm btn-primary';
         $this->form->addAction(_t('New'),  new TAction([$this, 'onEdit']), 'fa:plus green');
         $this->form->addActionLink( _t('Back'), new TAction(array('LocaisTrabalhoList','onReload')),  'far:arrow-alt-circle-left blue' );
-        
+
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 100%';
         $container->add(new TXMLBreadCrumb('menu.xml', 'LocaisTrabalhoList'));
         $container->add($this->form);
-        
+
         $script = new TElement('script');
         $script->type = 'text/javascript';
         $script->add("var maskBehavior = function (val) { 
@@ -93,34 +93,34 @@ class LocaisTrabalhoWindow extends TWindow
                              field.mask(maskBehavior.apply({}, arguments), options); } 
                          }; $('.phones').mask(maskBehavior, options);");
         parent::add($script);
-        
+
         parent::add($container);
     }
     
     public function onSave()
     {
         try
-        {            
+        {
             // open a transaction with database
             TTransaction::open($this->database);
-            
+
             // get the form data
             $object = $this->form->getData($this->activeRecord);
-            
+
             // validate data
             $this->form->validate();
-            
+
             // stores the object
             $object->store();
-            
+
             // fill the form with the active record data
             $this->form->setData($object);
-            
+
             // close the transaction
             TTransaction::close();
-            
+
             TSession::setValue(__CLASS__.'_object', $object);
-            
+
             // shows the success message
             if (isset($this->useMessages) AND $this->useMessages === false)
             {
@@ -135,13 +135,13 @@ class LocaisTrabalhoWindow extends TWindow
         {
             // get the form data
             $object = $this->form->getData();
-            
+
             // fill the form with the active record data
             $this->form->setData($object);
-            
+
             // shows the exception error message
             new TMessage('error', $e->getMessage());
-            
+
             // undo all pending operations
             TTransaction::rollback();
         }
@@ -191,7 +191,7 @@ class LocaisTrabalhoWindow extends TWindow
                     }
                 }
             }
-            
+
             TTransaction::close();
         }
         catch (Exception $e) // in case of exception
@@ -204,7 +204,7 @@ class LocaisTrabalhoWindow extends TWindow
     {
         TSession::setValue(__CLASS__.'_receive_form', $param['receive_form']);
         TSession::setValue(__CLASS__.'_receive_fields', $param['receive_fields']);
-        
+
         $this->onEdit($param);
     }
     
@@ -222,7 +222,7 @@ class LocaisTrabalhoWindow extends TWindow
             {
                 $obj->$receive = $object->$send;
             }
-                    
+
             TForm::sendData($receive_form, $obj);
         }
         

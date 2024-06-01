@@ -148,7 +148,7 @@ class AWLoginForm extends TPage
         $a->href = 'http://web.alquini.com.br';
         $nav->add($a);
         $img = new TElement('img');
-        $img->src = 'app/templates/alquiniweb1/img/logo.png';
+        $img->src = 'app/templates/alquiniweb/img/logo.png';
         $img->width = '350';
         $a->add($img);
         $wrapper->add($this->form);
@@ -218,7 +218,7 @@ class AWLoginForm extends TPage
                 throw new Exception(_t('You need read and agree to the terms of use and privacy policy'));
             }
             
-            $user = ApplicationAuthenticationService::authenticate( $data->login, $data->password, false );
+            $user = AWApplicationAuthenticationService::authenticate( $data->login, $data->password, false );
             
             if ($user)
             {
@@ -245,9 +245,9 @@ class AWLoginForm extends TPage
                     return;
                 }
                 
-                ApplicationAuthenticationService::loadSessionVars($user, true);
-                ApplicationAuthenticationService::setUnit( $data->unit_id ?? null );
-                ApplicationAuthenticationService::setLang( $data->lang_id ?? null );
+                AWApplicationAuthenticationService::loadSessionVars($user, true);
+                AWApplicationAuthenticationService::setUnit( $data->unit_id ?? null );
+                AWApplicationAuthenticationService::setLang( $data->lang_id ?? null );
                 SystemAccessLogService::registerLogin();
                 SystemAccessNotificationLogService::registerLogin();
                 
@@ -381,10 +381,17 @@ class AWLoginForm extends TPage
         {
             TTransaction::open('permission');
             $user = SystemUser::newFromLogin( TSession::getValue('login') );
+
+            AWApplicationAuthenticationService::loadSessionVars($user, true);
+            AWApplicationAuthenticationService::setUnit( $data->unit_id ?? null );
+            SystemAccessLogService::registerLogin();
+            SystemAccessNotificationLogService::registerLogin();
             
             if ($user)
             {
-                ApplicationAuthenticationService::loadSessionVars($user);
+                $programs = $user->getPrograms();
+                $programs['LoginForm'] = TRUE;
+                TSession::setValue('programs', $programs);
                 
                 $frontpage = $user->frontpage;
                 if ($frontpage instanceof SystemProgram AND $frontpage->controller)
